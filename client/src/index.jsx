@@ -14,8 +14,10 @@ class App extends React.Component {
   }
 
   search (term) {
+    console.log('search invoked index.jsx');
     console.log(`${term} was searched`);
     // TODO
+    //invoke search - post request to server
   }
 
   render () {
