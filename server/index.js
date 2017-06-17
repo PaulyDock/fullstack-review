@@ -1,5 +1,8 @@
 var express = require('express');
 var request = require('request');
+var mongoose = require('mongoose');
+var Repo = require('../database/index');
+// var MongoClient = require('mongodb').MongoClient;
 var githubToken = require('../github-config').githubToken;
 var username = require('../github-config').username;
 
@@ -10,6 +13,8 @@ var options = {
     'User-Agent': username
   }
 };
+
+var uri = "mongodb://127.0.0.1:27017"
 
 var app = express();
 
@@ -23,41 +28,35 @@ app.post('/repos/import', function (req, res, next) {
     userInput += chunk;
   }).on('end', function() {
     userInput = userInput.toString();
-    console.log('userInput after req.on end: ', userInput);
     options.url = `https://api.github.com/users/${userInput}/repos`;
-      // request(options, `https://api.github.com/?access_token=${githubToken}`,
-    console.log('options: ', options);
+
+    var db = mongoose.connection;
+    // db.on('error', console.error.bind(console, 'connection error:'));
+    // db.once('open', function() {
+    //   console.log('connected to db!!');
+    // });
+
+
     request(options, function(error, response, body) {
       if (error) { console.error('error: ', error); }
       body = JSON.parse(body);
-      for (key of body) {
-        console.log('key: ', key);
+      var curRepo;
+      for (repo of body) {
+        curRepo = new Repo(repo);
+        curRepo.save(function (err, repository) {
+          if (err) return console.error(err);
+          console.log('curRepo.name: ', repository.name, ', owner: ', repository.owner.login);
+        });
       }
-      
-      // console.log('body', body);
     });
     res.send(userInput);
   });
 
-
-  // request.on('error', function(err) {
-  //   console.error(err);
-  // }).on('data', function(chunk) {
-  //   body.push(chunk);
-  // }).on('end', function() {
-  //   body = Buffer.concat(body).toString();
-
-  // console.log('acc after req.on(end): ', acc);
-  //res.send(acc);
-  // .then(function() {
-  // });
-  //   next(acc);
-  // },
-  // function(req, res, next) {
 });
 
 app.get('/repos', function (req, res) {
   console.log('reached server');
+
   res.send('GET req received at server');
 });
 
