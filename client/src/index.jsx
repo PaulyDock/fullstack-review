@@ -14,8 +14,8 @@ class App extends React.Component {
   }
 
   search (term) {
-    console.log('search invoked index.jsx');
-    console.log(`${term} was searched`);
+    console.log(`index.jsx: ${term} was searched`);
+    requestUser(term);
     // TODO
     //invoke search - post request to server
   }
@@ -30,3 +30,18 @@ class App extends React.Component {
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
+
+function requestUser(username) {
+  $.ajax({
+    method: 'POST',
+    url: 'http://127.0.0.1:1128/repos/import',
+    data: username,
+    success: function(data) {
+      console.log('posted data: ', data);
+    },
+    error: function() {
+      console.log('post failed');
+    }
+  });
+};
+    // dataType: 'plain/text'

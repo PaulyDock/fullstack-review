@@ -8,7 +8,7 @@ class Search extends React.Component {
     }
   }
 
-  onChange (e) {
+  onChange(e) {
     //console.log('onChange occurred, current this.state: ', this.state);
     this.setState({
       term: e.target.value
@@ -17,12 +17,11 @@ class Search extends React.Component {
   }
 
   search() {
-    console.log('search invoked by :', this);
+    console.log('Search.jsx: search invoked');
     this.props.onSearch(this.state.term);
   }
 
   render() {
-    //console.log('this in search.jsx: ', this);
     return (<div>
       <h4>Add more repos!</h4>
       Enter a github username: <input value={this.state.terms} onChange={this.onChange.bind(this)}/>       
