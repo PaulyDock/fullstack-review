@@ -1,5 +1,15 @@
 var express = require('express');
 var request = require('request');
+var githubToken = require('../github-config').githubToken;
+var username = require('../github-config').username;
+
+var options = {
+  method: 'GET',
+  headers: {
+    Authorization: `token ${githubToken}`,
+    'User-Agent': username
+  }
+};
 
 var app = express();
 
@@ -14,12 +24,19 @@ app.post('/repos/import', function (req, res, next) {
   }).on('end', function() {
     userInput = userInput.toString();
     console.log('userInput after req.on end: ', userInput);
-    request.get('https://api.github.com/', function(error, response, body) {
-      console.error(error);
-
-
+    options.url = `https://api.github.com/users/${userInput}/repos`;
+      // request(options, `https://api.github.com/?access_token=${githubToken}`,
+    console.log('options: ', options);
+    request(options, function(error, response, body) {
+      if (error) { console.error('error: ', error); }
+      body = JSON.parse(body);
+      for (key of body) {
+        console.log('key: ', key);
+      }
+      
+      // console.log('body', body);
     });
-    res.end(acc);
+    res.send(userInput);
   });
 
 
@@ -55,5 +72,5 @@ app.listen(port, function() {
 //send request to github api for username and possibly other data
 
 const getUserReposFromGitHub = function(username) {
-
+  request.get('https://api')
 };
