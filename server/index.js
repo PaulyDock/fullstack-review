@@ -30,7 +30,7 @@ app.post('/repos/import', function (req, res, next) {
     userInput = userInput.toString();
     options.url = `https://api.github.com/users/${userInput}/repos`;
 
-    var db = mongoose.connection;
+    //var db = mongoose.connection;
     // db.on('error', console.error.bind(console, 'connection error:'));
     // db.once('open', function() {
     //   console.log('connected to db!!');
@@ -55,9 +55,10 @@ app.post('/repos/import', function (req, res, next) {
 });
 
 app.get('/repos', function (req, res) {
-  console.log('reached server');
-
-  res.send('GET req received at server');
+  Repo.find(function (err, repos) {
+    if (err) return console.error(err);
+    res.send(repos);
+  });
 });
 
 var port = 1128;
