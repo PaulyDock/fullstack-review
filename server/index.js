@@ -13,11 +13,9 @@ var options = {
     'User-Agent': username
   }
 };
-
 var uri = "mongodb://127.0.0.1:27017"
 
 var app = express();
-
 app.use(express.static(__dirname + '/../client/dist'));
 
 app.post('/repos/import', function (req, res, next) {
@@ -28,16 +26,20 @@ app.post('/repos/import', function (req, res, next) {
     userInput += chunk;
   }).on('end', function() {
     userInput = userInput.toString();
-    options.url = `https://api.github.com/users/${userInput}/repos`;
 
+    options.url = `https://api.github.com/users/${userInput}/repos`;
     request(options, function(error, response, body) {
       if (error) { console.error('error: ', error); }
       body = JSON.parse(body);
       var curRepo;
-      for (repo of body) {
-        Repo.create(repo, function(err) {
-          console.error(err);
-        });
+      if (body) {
+        for (repo of body) {
+          Repo.create(repo, function(err) {
+            // console.error(err);
+          });
+        }
+      } else {
+        res.send('no Repos for: ', userInput);
       }
     });
 
@@ -49,7 +51,7 @@ app.get('/repos', function (req, res) {
   // db = mongoose.connection;
   // db.dropDatabase();
   Repo.find(function (err, repos) {
-    if (err) return console.error(err);
+    //if (err) return console.error(err);
     res.send(repos);
   });
 });

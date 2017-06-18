@@ -13,12 +13,13 @@ class Search extends React.Component {
     this.setState({
       term: e.target.value
     });
-    console.log('onChange, state of term: ', this.state);
+    // console.log('onChange, state of term: ', this.state);
   }
 
   search() {
-    console.log('Search.jsx: search invoked');
+    // console.log('Search.jsx: search invoked');
     this.props.onSearch(this.state.term);
+    this.state.repos = 
   }
 
   render() {

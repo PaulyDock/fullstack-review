@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import Search from './components/Search.jsx';
 import RepoList from './components/RepoList.jsx';
+import RepoListEntry from './components/RepoListEntry.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -14,10 +15,9 @@ class App extends React.Component {
   }
 
   search (term) {
-    console.log(`index.jsx: ${term} was searched`);
+    // console.log(`index.jsx: ${term} was searched`);
     requestUser(term);
-    // TODO
-    //invoke search - post request to server
+
   }
 
   render () {
@@ -38,6 +38,7 @@ function requestUser(username) {
     data: username,
     success: function(data) {
       console.log('posted data: ', data);
+      console.log('this.state', this.state);
     },
     error: function() {
       console.log('post failed');
