@@ -30,31 +30,24 @@ app.post('/repos/import', function (req, res, next) {
     userInput = userInput.toString();
     options.url = `https://api.github.com/users/${userInput}/repos`;
 
-    //var db = mongoose.connection;
-    // db.on('error', console.error.bind(console, 'connection error:'));
-    // db.once('open', function() {
-    //   console.log('connected to db!!');
-    // });
-
-
     request(options, function(error, response, body) {
       if (error) { console.error('error: ', error); }
       body = JSON.parse(body);
       var curRepo;
       for (repo of body) {
-        curRepo = new Repo(repo);
-        curRepo.save(function (err, repository) {
-          if (err) return console.error(err);
-          console.log('curRepo.name: ', repository.name, ', owner: ', repository.owner.login);
+        Repo.create(repo, function(err) {
+          console.error(err);
         });
       }
     });
+
     res.send(userInput);
   });
-
 });
 
 app.get('/repos', function (req, res) {
+  // db = mongoose.connection;
+  // db.dropDatabase();
   Repo.find(function (err, repos) {
     if (err) return console.error(err);
     res.send(repos);
