@@ -19,7 +19,7 @@ class Search extends React.Component {
   search() {
     // console.log('Search.jsx: search invoked');
     this.props.onSearch(this.state.term);
-    this.state.repos = 
+    //this.state.repos =
   }
 
   render() {
